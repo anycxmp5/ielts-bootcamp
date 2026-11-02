@@ -1,0 +1,46 @@
+﻿<!doctype html><meta charset="utf-8"><title>check</title><body style="font-family:monospace"><pre id="o"></pre>
+<script src="../js/core.js"></script><script src="../data/reading.js"></script><script src="../data/listening.js"></script><script src="../data/writing.js"></script><script src="../data/speaking.js"></script><script src="../data/test1-listening.js"></script><script src="../data/test1-reading.js"></script><script src="../data/test2-listening.js"></script><script src="../data/test2-reading.js"></script><script src="../data/test3-listening.js"></script><script src="../data/test3-reading.js"></script><script src="../data/tests.js"></script><script src="../data/vocab.js"></script><script src="../data/lessons.js"></script><script src="../js/tools.js"></script><script src="../js/grade.js"></script>
+<script>
+const IE = window.IE, out = [], bad = (m) => out.push('FAIL ' + m), wc = (t) => (t.match(/[A-Za-z’'-]+/g) || []).length;
+IE.init();
+const flat = (s) => s.skill === 'reading' ? s.paras.map((p) => p.t).join(' ') : s.script.map((x) => x[1]).join(' ');
+IE.sets.forEach((s) => {
+  const ids = new Set();
+  s.qs.forEach((q) => {
+    if (ids.has(q.id)) bad('дубль ' + q.id); ids.add(q.id);
+    const ok = q.t === 'gap' ? q.answer.length : q.t === 'mc' ? q.answer >= 0 && q.answer < q.choices.length : q.t === 'ms' ? q.answer.length === q.pick && q.answer.every((a) => a >= 0 && a < q.choices.length) : q.t === 'sel' ? q.answer >= 0 && q.answer < q.opts.length : ['T', 'F', 'Y', 'N', 'NG'].includes(q.answer);
+    if (!ok) bad('ответ ' + q.id);
+    if (q.t === 'gap' && !IE.isCorrect(q, q.answer[0])) bad('gap self ' + q.id);
+    if (q.t === 'ms' && !IE.isCorrect(q, q.answer)) bad('ms self ' + q.id);
+    if (q.t === 'gap') {
+      const txt = flat(s).toLowerCase().replace(/[-,.]/g, ' ');
+      if (!q.answer.some((a) => /^[\d£$]/.test(a) || txt.includes(String(a).toLowerCase()))) bad('ответ не найден в ' + (s.skill === 'reading' ? 'тексте ' : 'скрипте ') + q.id + ': ' + q.answer[0]);
+      // повтор ответа в тексте — возможная неоднозначность (для информации, не ошибка)
+      const a0 = String(q.answer[0]).toLowerCase(); const n = a0 && !/^[\d£$]/.test(a0) ? txt.split(a0).length - 1 : 0;
+      if (n > 1) out.push('~ ответ «' + q.answer[0] + '» встречается ' + n + '× в ' + s.id + ' (' + q.id + ')');
+    }
+  });
+  if (s.test && s.marks < 10) bad(s.id + ' баллов ' + s.marks);
+});
+IE.tests.forEach((t) => {
+  const L = t.listening.map((i) => IE.setById[i]), R = t.reading.map((i) => IE.setById[i]);
+  if (L.some((x) => !x) || R.some((x) => !x)) return bad('тест ' + t.id + ': нет набора');
+  const ml = IE.sumMarks(L), mr = IE.sumMarks(R);
+  if (ml !== 40) bad('тест ' + t.id + ' Listening ' + ml);
+  if (mr !== 40) bad('тест ' + t.id + ' Reading ' + mr);
+  t.writing.forEach((id) => { if (!IE.writingTasks.find((x) => x.id === id)) bad('writing ' + id); });
+  t.speaking.forEach((id) => { if (!IE.speakingTasks.find((x) => x.id === id)) bad('speaking ' + id); });
+  out.push('Тест ' + t.id + ': L=' + ml + ' R=' + mr + ' | слов в R: ' + R.map((s) => wc(flat(s))).join('/') + ' | слов в L: ' + L.map((s) => wc(flat(s))).join('/'));
+});
+IE.sets.filter((s) => s.test === 0).forEach((s) => out.push('(мини) ' + s.id + ' баллов ' + s.marks));
+IE.lessons.forEach((l) => l.practice.forEach((id) => { if (!IE.setById[id] && !IE.writingTasks.find((t) => t.id === id) && !IE.speakingTasks.find((t) => t.id === id)) bad('урок ' + l.id + ' → ' + id); }));
+IE.writingTasks.filter((t) => t.model).forEach((t) => {
+  const w = IE.analyze(t.model).words, min = t.task === 1 ? 150 : 250, g = IE.grade.writingOffline(t.model, t.task, t);
+  if (w < min) bad('образец ' + t.id + ': ' + w + ' слов < ' + min);
+  out.push('образец ' + t.id + ': ' + w + ' слов, офлайн-оценка ' + g.overall + ' ' + JSON.stringify(g.bands));
+});
+out.push('bands: L30=' + IE.bandFromRaw('listening', 30) + ' R39=' + IE.bandFromRaw('reading', 39) + ' overall(6,6,6.5,6.5)=' + IE.overall([6, 6, 6.5, 6.5]) + ' (ожид. 6.5), overall(6.5,6.5,7,7)=' + IE.overall([6.5, 6.5, 7, 7]) + ' (ожид. 7.0), overall(5.5,6,6,6)=' + IE.overall([5.5, 6, 6, 6]) + ' (ожид. 6.0)');
+out.push('ms partial score: ' + IE.score({ t: 'ms', answer: [0, 3], pick: 2 }, [0, 1]) + ' (ожид. 1)');
+out.push(out.some((x) => x.startsWith('FAIL')) ? 'ЕСТЬ ОШИБКИ' : 'ВСЁ ОК');
+document.getElementById('o').textContent = out.join('\n'); window.RESULT = out;
+</script>

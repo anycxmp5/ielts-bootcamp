@@ -1,0 +1,135 @@
+/* Listening: 4 части по 10 заданий. Скрипты озвучиваются синтезатором речи браузера (speechSynthesis) */
+(function () {
+  'use strict';
+  const { mc, gap, sel, group } = window.IE;
+  const FORM = 'Complete the notes. Write NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.';
+  const WHO = ['Maya', 'Tom', 'Both of them'];
+
+  window.IE.addSets([
+    {
+      id: 'l1', skill: 'listening', title: 'Part 1 — Joining the Leisure Centre', ru: 'Часть 1 — запись в спортцентр', speakers: ['Receptionist', 'Caller'],
+      script: [
+        ['A', 'Good morning, Riverside Leisure Centre. How can I help?'],
+        ['B', 'Hi, I’d like to join the centre. Could you tell me how it works?'],
+        ['A', 'Of course. I’ll just take some details. What’s your full name?'],
+        ['B', 'It’s Daniel Hartley. That’s H-A-R-T-L-E-Y.'],
+        ['A', 'Thank you. And your mobile number?'],
+        ['B', 'Zero seven seven zero zero, nine four one, three three six.'],
+        ['A', 'Lovely. What type of membership are you interested in? We have standard, which is the gym and pool, and premium, which also includes classes.'],
+        ['B', 'I’ll take the premium, please.'],
+        ['A', 'That’s forty-two pounds a month, or four hundred and ten pounds if you pay for the whole year.'],
+        ['B', 'Monthly is better for me.'],
+        ['A', 'No problem. When would you like to start?'],
+        ['B', 'Next Monday, which is the fourteenth of April.'],
+        ['A', 'Great. And your address?'],
+        ['B', 'It’s twenty-seven Mill Lane.'],
+        ['A', 'Thank you. Do you have any health conditions we should know about?'],
+        ['B', 'I have a bad knee, so I’d prefer to avoid anything too hard on it.'],
+        ['A', 'Then I’d recommend swimming and cycling rather than running.'],
+        ['B', 'That sounds perfect.'],
+        ['A', 'May I ask how you heard about us?'],
+        ['B', 'A leaflet came through my door last week.'],
+        ['A', 'Wonderful. On your first visit please bring photo identification. A passport is best.'],
+        ['B', 'Fine, I’ll bring my passport. Thanks very much.'],
+      ],
+      qs: group(FORM, [
+        gap('Surname: ___', 'Hartley', 'H-A-R-T-L-E-Y.'),
+        gap('Mobile number: ___', ['07700941336', '07700 941 336'], 'Цифры: 07700 941 336.'),
+        gap('Type of membership: ___', 'premium', ''),
+        gap('Monthly price: £___', '42', '«forty-two pounds a month». Не путайте с годовой ценой 410.'),
+        gap('Start date: ___ ', ['14 April', '14th April', 'April 14', 'April 14th', 'the 14th of April', '14th of April'], 'Next Monday — the fourteenth of April.'),
+        gap('Address: 27 ___', 'Mill Lane', ''),
+        gap('Health problem: bad ___', 'knee', ''),
+        gap('Recommended activity: cycling and ___', 'swimming', ''),
+        gap('Heard about the centre through a ___', 'leaflet', ''),
+        gap('Needs to bring photo ID, such as a ___', 'passport', ''),
+      ]),
+    },
+    {
+      id: 'l2', skill: 'listening', title: 'Part 2 — Harbour Maritime Museum Tour', ru: 'Часть 2 — экскурсия в музее', speakers: ['Guide'],
+      script: [
+        ['A', 'Good afternoon, everyone, and welcome to the Harbour Maritime Museum. My name’s Priya and I’ll be your guide today.'],
+        ['A', 'Before we begin, a few practical points. The tour will last about an hour and a half, finishing at half past three.'],
+        ['A', 'Photography is allowed throughout the museum, but please do not use a flash in the Navigation Gallery, because the old maps are very sensitive to light.'],
+        ['A', 'The museum was founded in 1962 by a group of retired sailors, and originally it occupied just one room. It moved to this building, a former warehouse, in 1988.'],
+        ['A', 'The building has three floors. On the ground floor you will find the café and the shop, and I would particularly recommend the shop’s range of books on local history.'],
+        ['A', 'The first floor is devoted to the age of sail, with ship models and the Navigation Gallery. The top floor hosts our special exhibition, which this month is about the history of lighthouses.'],
+        ['A', 'If anyone cannot manage the stairs, there is a lift at the back of the building, next to the cloakroom.'],
+        ['A', 'Now, if you would like to follow me, we will start with the oldest object in our collection.'],
+      ],
+      qs: [
+        ...group('Choose the correct letter, A, B or C.', [
+          mc('How long will the tour last?', ['one hour', 'ninety minutes', 'two hours'], 1, '«an hour and a half».'),
+          mc('Flash photography is not allowed in', ['the café', 'the top floor', 'the Navigation Gallery'], 2, ''),
+          mc('The museum was founded by', ['retired sailors', 'the city council', 'a shipping company'], 0, ''),
+          mc('The original museum occupied', ['a whole floor', 'one room', 'a warehouse'], 1, 'Склад — это нынешнее здание, а раньше была одна комната.'),
+          mc('The lift is located', ['next to the café', 'on the top floor', 'at the back of the building'], 2, ''),
+        ]),
+        ...group('Complete the notes. Write ONE WORD AND/OR A NUMBER for each answer.', [
+          gap('The museum building used to be a ___', 'warehouse', ''),
+          gap('This month’s special exhibition is about ___', 'lighthouses', ''),
+          gap('The shop sells books on local ___', 'history', ''),
+          gap('The museum moved to this building in ___', '1988', 'Не путайте с годом основания — 1962.'),
+          gap('The café is on the ___ floor', 'ground', ''),
+        ]),
+      ],
+    },
+    {
+      id: 'l3', skill: 'listening', title: 'Part 3 — Planning a Presentation', ru: 'Часть 3 — подготовка презентации', speakers: ['Maya', 'Tom', 'Tutor'],
+      script: [
+        ['C', 'Right, so you have chosen to present on microplastics. Have you decided on a focus?'],
+        ['A', 'We were thinking of looking at how microplastics get into the food chain, but Tom wasn’t sure.'],
+        ['B', 'I thought the topic was too broad, yes. There’s so much research that we couldn’t cover it in fifteen minutes.'],
+        ['C', 'I agree. How about narrowing it down to a single species, say mussels? They filter large amounts of water, so they are a good example.'],
+        ['A', 'That’s a great idea. Originally I wanted to run our own experiment, but the laboratory isn’t available until after the presentation deadline.'],
+        ['C', 'Then use published research instead. Just make sure the sources are recent.'],
+        ['B', 'Fine. I can look for statistics on how many particles are found in mussels in different countries.'],
+        ['C', 'Good. And remember, fifteen minutes means you have to be selective. One thing I always warn students about is reading from notes. Examiners can tell, and it loses the audience.'],
+        ['A', 'We’ll just use key words on the slides, then. I’ll write the introduction, and Tom can handle the conclusion.'],
+        ['B', 'Actually, I’d like us both to design the slides, so they look consistent.'],
+        ['A', 'Agreed. And since Tom is good with timing, he can organise our practice runs.'],
+        ['C', 'Excellent. Please send me your slides by Thursday, and I’ll give you feedback before the presentation.'],
+      ],
+      qs: [
+        ...group('Choose the correct letter, A, B or C.', [
+          mc('Why does Tom think the original topic is a problem?', ['It is too broad.', 'It is out of date.', 'It is too technical.'], 0, ''),
+          mc('The tutor suggests focusing on', ['a single species', 'a single country', 'a single plastic type'], 0, 'Mussels — одна конкретная группа организмов.'),
+          mc('Why will the students not run their own experiment?', ['They lack equipment.', 'The laboratory is not available in time.', 'The tutor forbade it.'], 1, ''),
+          mc('How long is the presentation?', ['ten minutes', 'fifteen minutes', 'twenty minutes'], 1, ''),
+          mc('What does the tutor warn students against?', ['using statistics', 'reading from notes', 'using photographs'], 1, ''),
+          mc('The students must send their slides to the tutor by', ['Tuesday', 'Wednesday', 'Thursday'], 2, ''),
+        ]),
+        ...group('Who is going to do each task? Choose Maya, Tom or Both of them.', [
+          sel('Write the introduction', WHO, 0, ''),
+          sel('Find statistics', WHO, 1, ''),
+          sel('Design the slides', WHO, 2, ''),
+          sel('Organise practice runs', WHO, 1, ''),
+        ]),
+      ],
+    },
+    {
+      id: 'l4', skill: 'listening', title: 'Part 4 — A Short History of the Bicycle', ru: 'Часть 4 — лекция об истории велосипеда', speakers: ['Lecturer'],
+      script: [
+        ['A', 'Today I would like to look at the development of the bicycle, an invention that changed the way ordinary people travelled.'],
+        ['A', 'The earliest ancestor of the bicycle was the running machine, invented in 1817 by a German baron, Karl von Drais. It had no pedals; riders simply pushed along the ground with their feet.'],
+        ['A', 'The first pedals appeared in the 1860s in France, and they were attached directly to the front wheel. This machine was nicknamed the boneshaker, because its wooden wheels with iron rims gave a very uncomfortable ride.'],
+        ['A', 'In the 1870s came the penny-farthing, with an enormous front wheel. It was faster, but also dangerous: riders often fell forward over the handlebars.'],
+        ['A', 'The real breakthrough was the safety bicycle, which appeared in 1885. Its two wheels were the same size, and it was driven by a chain connected to the rear wheel, which made it far more stable.'],
+        ['A', 'Three years later, in 1888, John Boyd Dunlop invented the pneumatic tyre, filled with air, which finally made cycling comfortable.'],
+        ['A', 'The social impact was huge. Many historians argue that the bicycle did more for women’s independence than almost any other invention of the century.'],
+      ],
+      qs: group('Complete the notes. Write ONE WORD AND/OR A NUMBER for each answer.', [
+        gap('Karl von Drais, the inventor of the running machine, came from ___', ['Germany', 'German'], ''),
+        gap('The running machine was invented in ___', '1817', ''),
+        gap('The first pedals were attached to the ___ wheel', 'front', ''),
+        gap('The boneshaker had ___ wheels with iron rims', 'wooden', ''),
+        gap('Penny-farthing riders often fell over the ___', 'handlebars', ''),
+        gap('The safety bicycle appeared in ___', '1885', ''),
+        gap('Both wheels of the safety bicycle were the same ___', 'size', ''),
+        gap('The safety bicycle was driven by a ___', 'chain', ''),
+        gap('Dunlop invented the ___ tyre', 'pneumatic', ''),
+        gap('The bicycle increased women’s ___', 'independence', ''),
+      ]),
+    },
+  ]);
+})();
